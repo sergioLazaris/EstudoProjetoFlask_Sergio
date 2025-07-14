@@ -21,4 +21,4 @@ bcrypt = Bcrypt(app)
 
 
 from app.view import homepage
-from app.models import Contato
+from app.models import Contato, User
