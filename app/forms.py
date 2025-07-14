@@ -1,9 +1,8 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
-from flask_bcrypt import bcrypt
 
-from app import db
+from app import db, bcrypt
 from app.models import Contato, User
 
 class UserForm(FlaskForm):
@@ -15,11 +14,11 @@ class UserForm(FlaskForm):
     btnSubmit=SubmitField('Enviar')
     
     def validate_email(self, email):
-        if User.query.filter(email==email.data).first():
+        if User.query.filter_by(email=email.data).first():
             return ValidationError('Usuário já cadastrado com esse E-mail!!!')
     
     def save(self):
-        senha = bcrypt.generate_password_hash(self.senha.encode('utf-8'))
+        senha = bcrypt.generate_password_hash(self.senha.data.encode('utf-8'))
         user = User(
             nome = self.nome.data,
             sobrenome = self.sobrenome.data,
@@ -31,6 +30,20 @@ class UserForm(FlaskForm):
         db.session.commit()
         return user
     
+class LoginForm(FlaskForm):
+    email = StringField('E-mail', validators=[DataRequired(), Email()])
+    senha = PasswordField('Senha', validators=[DataRequired()])
+    btnSubmit = SubmitField('Login')
+
+    def login(self):
+        user = User.query.filter_by(email=self.email.data).first()
+        if user:
+            if bcrypt.check_password_hash(user.senha, self.senha.data.encode('utf-8')):
+                return user
+            else:
+                raise Exception("Senha incorreta!")
+        else:
+            raise Exception("Usuário não encontrado!")
 
 class contatoForm(FlaskForm):
     nome = StringField('Nome', validators=[DataRequired()])
