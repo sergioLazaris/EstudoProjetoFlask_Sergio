@@ -70,5 +70,5 @@ class PostForm(FlaskForm):
             mensagem = self.mensagem.data,
             user_id = user_id
         )
-        db.session.add()
+        db.session.add( )
         db.session.commit()

@@ -1,8 +1,8 @@
 from app import app, db
 from flask import render_template, url_for, request, redirect
 from app.models import Contato
-from app.forms import contatoForm, UserForm, LoginForm
-from flask_login import login_user, logout_user, current_user, PostForm
+from app.forms import contatoForm, UserForm, LoginForm, PostForm
+from flask_login import login_user, logout_user, current_user
 
 @app.route('/', methods=['GET', 'POST'])
 def homepage():
