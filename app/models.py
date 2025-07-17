@@ -28,4 +28,7 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     data_criacao = db.Column(db.DateTime, default=datetime.now())
     mensagem = db.Column(db.String, nullable=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)    
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    
+    def msg_resumo(self):
+        return f"{self.mensagem[:10]} ..."
