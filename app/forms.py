@@ -15,6 +15,7 @@ class UserForm(FlaskForm):
     def validate_email(self, email):
         if User.query.filter_by(email=email.data).first():
             return ValidationError('Usuário já cadastrado com esse E-mail!!!')
+        return True
     
     def save(self):
         senha = bcrypt.generate_password_hash(self.senha.data.encode('utf-8'))
@@ -70,5 +71,5 @@ class PostForm(FlaskForm):
             mensagem = self.mensagem.data,
             user_id = user_id
         )
-        db.session.add( )
+        db.session.add(post)
         db.session.commit()
