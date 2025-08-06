@@ -47,6 +47,7 @@ def PostNovo():
 @app.route('/post/lista/')
 def PostLista():
     posts = Post.query.all()
+    print(current_user.posts)
     return render_template('post_lista.html', posts=posts)
 
 @app.route('/cadastro/', methods=['GET', 'POST'])
