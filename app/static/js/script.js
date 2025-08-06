@@ -1,1 +1,1 @@
-console.log('Meu arquivo JS')
+console.log('Quem leu é lindo')
