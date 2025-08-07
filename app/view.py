@@ -1,7 +1,7 @@
 from app import app, db
 from flask import render_template, url_for, request, redirect
 from app.models import Contato, Post
-from app.forms import contatoForm, UserForm, LoginForm, PostForm
+from app.forms import contatoForm, UserForm, LoginForm, PostForm, PostComentarioForm
 from flask_login import login_user, logout_user, current_user
 
 @app.route('/', methods=['GET', 'POST'])
@@ -49,6 +49,15 @@ def PostLista():
     posts = Post.query.all()
     print(current_user.posts)
     return render_template('post_lista.html', posts=posts)
+
+@app.route('/post/<int:id>/', methods=['GET', 'POST'])
+def PostDetail(id):
+    posts = Post.query.get(id)
+    form = PostComentarioForm()
+    if form.validate_on_submit():
+        form.save(current_user.id, id)
+        return redirect(url_for('PostDetail', id=id))
+    return render_template('post.html', posts=posts, form=form)
 
 @app.route('/cadastro/', methods=['GET', 'POST'])
 def cadastro():
