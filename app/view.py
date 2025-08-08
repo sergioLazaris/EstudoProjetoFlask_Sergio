@@ -2,7 +2,7 @@ from app import app, db
 from flask import render_template, url_for, request, redirect
 from app.models import Contato, Post
 from app.forms import contatoForm, UserForm, LoginForm, PostForm, PostComentarioForm
-from flask_login import login_user, logout_user, current_user
+from flask_login import login_user, logout_user, current_user, login_required
 
 @app.route('/', methods=['GET', 'POST'])
 def homepage():
@@ -22,7 +22,8 @@ def homepage():
 
     return render_template('index.html', context=context, form = form)
 
-@app.route('/contato/', methods=['GET', 'POST'])    
+@app.route('/contato/', methods=['GET', 'POST'])
+@login_required
 def contato():
     form = contatoForm()
     context = {}
@@ -32,11 +33,13 @@ def contato():
     return render_template('contato.html', context=context, form=form)
 
 @app.route('/sair/')
+@login_required
 def logout():
     logout_user()
     return redirect(url_for('homepage'))
 
 @app.route('/post/novo/', methods=['GET', 'POST'])
+@login_required
 def PostNovo():
     form = PostForm()
     if form.validate_on_submit():
@@ -45,12 +48,14 @@ def PostNovo():
     return render_template('post_novo.html', form=form)
 
 @app.route('/post/lista/')
+@login_required
 def PostLista():
     posts = Post.query.all()
     print(current_user.posts)
     return render_template('post_lista.html', posts=posts)
 
 @app.route('/post/<int:id>/', methods=['GET', 'POST'])
+@login_required
 def PostDetail(id):
     posts = Post.query.get(id)
     form = PostComentarioForm()
@@ -69,7 +74,11 @@ def cadastro():
     return render_template('cadastro.html', form=form)
 
 @app.route('/contato/lista/')
+@login_required
 def contatoLista():
+    
+    if current_user.id == 6: return redirect(url_for('homepage'))
+    
     if request.method == 'GET':
         pesquisa = request.args.get('pesquisa', '')
 
@@ -81,6 +90,7 @@ def contatoLista():
     return render_template('contato_lista.html', context=context)
 
 @app.route('/contato/<int:id>/')
+@login_required
 def contatoDetail(id):
     obj = Contato.query.get(id)
     return render_template('contato_detail.html', obj=obj)

@@ -26,8 +26,8 @@
                     {{form.btnSubmit(class="btn btn-primary col-12 mt-3")}}
                 </form>
             </div>
-            <hr>
-            <div class="col-12">
+            <div class="col-12 mt-4 border rounded shadow p-">
+                <h3>Comentários</h3>
                 {% for c in posts.comentarios %}
                 <p>
                     <b>Usuário: </b> {{c.user.nome}} {{c.user.sobrenome}} <br>
